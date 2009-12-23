@@ -55,7 +55,7 @@ def screenshot():
 # Operating System Function
 def os_display(): 
 	arch = Popen(['uname', '-m'], stdout=PIPE).communicate()[0].rstrip('\n')
-	os = 'KUbuntu %s' % (arch)
+	os = 'Kubuntu %s' % (arch)
 	output('OS', os)
 
 # Kernel Function
