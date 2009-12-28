@@ -94,7 +94,8 @@ def battery_display():
 def de_display():
 	dict = {'gnome-session': 'GNOME',
 		'ksmserver': 'KDE',
-		'xfce-mcs-manager': 'Xfce'}
+		'xfce-mcs-manager': 'Xfce',
+		'xfconfd': 'Xfce 4.6'}
 	de = 'None found'
 	for key in dict.keys():
 		if key in processes: de = dict[key]
@@ -108,12 +109,12 @@ def wm_display():
 		'compiz': 'Compiz',
 		'dwm': 'DWM',
 		'enlightenment': 'Enlightenment',
-                'fluxbox': 'Fluxbox',
+		'fluxbox': 'Fluxbox',
 		'fvwm': 'FVWM',
 		'icewm': 'icewm',
 		'kwin': 'kwin',
 		'metacity': 'Metacity',
-                'openbox': 'Openbox',
+		'openbox': 'Openbox',
 		'wmaker': 'Window Maker',
 		'xfwm4': 'Xfwm',
 		'xmonad': 'Xmonad'}  
@@ -132,10 +133,13 @@ def packages_display():
 # File System Function
 def fs_display(mount=''):
 	p1 = Popen(['df', '-Ph',  mount], stdout=PIPE).communicate()[0]
-	part = [line for line in p1.split('\n') if line][1]
-	part = part.split()[2]
+	used = [line for line in p1.split('\n') if line][1]
+	used = used.split()[2]
+	total = [line for line in p1.split('\n') if line][1]
+	total = total.split()[2]
 	if mount == '/': mount = '/root'
 	fs = mount.rpartition('/')[2].title()
+	part = '%s / %s' % (used, total)
    	output (fs, part)
 
 # Run functions found in 'display' array.
