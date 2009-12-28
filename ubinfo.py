@@ -55,7 +55,10 @@ def screenshot():
 # Operating System Function
 def os_display(): 
 	arch = Popen(['uname', '-m'], stdout=PIPE).communicate()[0].rstrip('\n')
-	os = 'Ubuntu %s' % (arch)
+	lsb = Popen(['lsb_release', '-d'], stdout=PIPE).communicate()[0].lstrip('	')
+	distro = lsb.split(' ')[1]
+	release = lsb.split(' ')[2]
+	os = '%s %s %s' % (distro, release, arch)
 	output('OS', os)
 
 # Kernel Function
