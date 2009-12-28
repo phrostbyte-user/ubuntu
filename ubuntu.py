@@ -136,7 +136,7 @@ def fs_display(mount=''):
 	used = [line for line in p1.split('\n') if line][1]
 	used = used.split()[2]
 	total = [line for line in p1.split('\n') if line][1]
-	total = total.split()[2]
+	total = total.split()[1]
 	if mount == '/': mount = '/root'
 	fs = mount.rpartition('/')[2].title()
 	part = '%s / %s' % (used, total)
