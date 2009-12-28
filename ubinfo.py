@@ -4,6 +4,7 @@
 import subprocess, optparse
 from subprocess import Popen, PIPE
 from optparse import OptionParser
+import re
 
 # Display
 display = [
@@ -15,6 +16,8 @@ display = [
 	'de', 
 	'wm', 
 	'packages',
+	'gpu',
+	'cpu',
 #	'fs:/boot', 
 #	'fs:/home',
 #	'fs:/MOUNT/POINT
@@ -41,6 +44,9 @@ p1 = Popen(['ps', '-A'], stdout=PIPE).communicate()[0].split('\n')
 processes = [process.split()[3] for process in p1 if process]
 p1 = None
 
+# Find info from uname -a
+uname = Popen(['uname', '-a'], stdout=PIPE).communicate()[0].split()
+
 # Print coloured key with normal value.
 def output(key, value):
 	output = '%s%s:%s %s' % (color3, key, clear, value)
@@ -48,26 +54,22 @@ def output(key, value):
 
 # Screenshot Function
 screen = '%s' % options.screenshot
-osos
+
 def screenshot():
 	subprocess.check_call(['scrot', '-cd5'])
 
 # Operating System Function
 def os_display(): 
-	arch = Popen(['uname', '-m'], stdout=PIPE).communicate()[0].rstrip('\n')
-	distro = Popen(['lsb_release', '-d'], stdout=PIPE).communicate()[0].split()[1::]
-	os = '%s %s %s' % (distro[0], distro[1], arch)
-	output('OS', os)
+	os = Popen(['lsb_release', '-d'], stdout=PIPE).communicate()[0].split()[1::]
+	output('OS', '%s %s' % (os[0], os[1]))
 
 # Kernel Function
 def kernel_display():
-	kernel = Popen(['uname', '-r'], stdout=PIPE).communicate()[0].rstrip('\n')
-	output ('Kernel', kernel)
-
+	output ('Kernel', '%s (%s)' % (uname[2], uname[11]))
+	
 # Kernel Function
 def hostname_display():
-	hostname = Popen(['uname', '-n'], stdout=PIPE).communicate()[0].rstrip('\n')
-	output ('Hostname', hostname)
+	output ('Hostname', '%s' % uname[1])
 
 # Uptime Function
 def uptime_display():
@@ -143,6 +145,20 @@ def fs_display(mount=''):
 	part = '%s / %s' % (used, total)
    	output (fs, part)
 
+# GPU function
+def gpu_display():
+	gpu = Popen('lspci', stdout=PIPE).communicate()[0].split('\n')
+	expr = re.compile('VGA c')
+	output ('GPU', '%s' % ''.join(filter(expr.search, gpu)).split(':')[2])
+
+# CPU function
+def cpu_display():
+	cpuinfo = open('/proc/cpuinfo')
+	cpu = set(cpuinfo.read().split('\n'))
+	cpuinfo.close()
+	expr = re.compile('model name')
+	output ('CPU', '%s' % ''.join(filter(expr.search, cpu)).split(':')[1])
+
 # Run functions found in 'display' array.
 for x in display:
 	call = [arg for arg in x.split(':') if arg]
@@ -154,7 +170,7 @@ for x in display:
 		func()
 
 # Array containing values.
-list.extend(['']*(13 - len(display)))
+list.extend(['']*(15 - len(display)))
 
 ###### Result #######   
 print """
@@ -174,8 +190,8 @@ print """
 %s ++++++++ %s+++++                  %s+++++++++     %s
 %s  ++++++ %s++++++                 %s++++++++++     %s
 %s        ++++++++               %s++++++++++      %s
-%s        +++++++++             %s++++++++++       
-%s         +++++++++         %s++++++++++++        
+%s        +++++++++             %s++++++++++       %s
+%s         +++++++++         %s++++++++++++        %s
 %s          +++++++  %s+++++++++++++++++++         
 %s           +++++  %s++++++++++++ %s,,,,            
 %s             ++  %s++++++++++++ %s++++++           
@@ -183,7 +199,7 @@ print """
 %s                  ++++++++++ %s++++++++          
 %s                             ++++++++          
 %s                              ++++++           
-%s """ % (color3, color3, color2, color3, color2, color3, list[0], color, color2, color3, list[1], color, color2, color3, list[2], color, color2, list[3], color, color2, list[4], color, color2, list[5], color, color2, list[6], color2, color, color2, list[7], color2, color, color2, list[8], color2, color, list[9], color2, color, color3, list[10], color2, color, color3, list[11], color, color3, list[12], color, color3, color, color3, color, color3, color, color3, color, color, color3, color, color3, color, color3, color, color, color, clear)
+%s """ % (color3, color3, color2, color3, color2, color3, list[0], color, color2, color3, list[1], color, color2, color3, list[2], color, color2, list[3], color, color2, list[4], color, color2, list[5], color, color2, list[6], color2, color, color2, list[7], color2, color, color2, list[8], color2, color, list[9], color2, color, color3, list[10], color2, color, color3, list[11], color, color3, list[12], color, list[13], color3, list[14], color, color3, color, color3, color, color3, color, color, color3, color, color3, color, color3, color, color, color, clear)
 
 if screen == 'True':
 	screenshot()
