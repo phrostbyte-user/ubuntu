@@ -48,7 +48,7 @@ def output(key, value):
 
 # Screenshot Function
 screen = '%s' % options.screenshot
-
+osos
 def screenshot():
 	subprocess.check_call(['scrot', '-cd5'])
 
@@ -57,7 +57,7 @@ def os_display():
 	arch = Popen(['uname', '-m'], stdout=PIPE).communicate()[0].rstrip('\n')
 	distro = Popen(['lsb_release', '-d'], stdout=PIPE).communicate()[0].split()[1::]
 	os = '%s %s %s' % (distro[0], distro[1], arch)
-	output('OS', 'os')
+	output('OS', os)
 
 # Kernel Function
 def kernel_display():
