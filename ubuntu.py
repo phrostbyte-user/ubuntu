@@ -157,31 +157,31 @@ list.extend(['']*(13 - len(display)))
 
 ###### Result #######   
 print """
-%s                              z$$ZZz           
-%s                             ZZZZZ$$Z          
-%s                   I$7IIII$I %sZZZZZZZ$          
-%s                ~IIIIIIIIIII %s$ZZZZZZZ          %s
-%s             $+  %s~IIIIIIIIII?  %sZZZZ$           %s
-%s           7+++=  %s:IIIIII77III %s`````           %s
-%s          $++++++  %sI777777777777IIIII,         %s
-%s         Z+++++???          %sZ77777IIII         %s
-%s        7+++++???,            %sZ$$$$$7II        %s
-%s        +++++??$               %s$$$$$$777       %s
-%s  $??IIZ %s?+++++                 %s$$$$$777       %s
-%s Z???IIII %s==++7                  %sZ$$!$$77:     %s
-%s ????II++  %s=++=                                %s
-%s $???++++ %s=+++7                  %s888OOOO:      %s
-%s  Z+=++$ %s?==+++                 %sI888OOOO       %s
-%s        =====++7               %s+8888OOOO$      %s
-%s        $====+++?             %s7888OOOOO        
-%s         7====++++          %s+888OOOOOO:        
-%s          I====++  %s=OOZ$$O8OOOOOOOOOO=         
-%s           Z====  %s,ZZOOOOOOOOO %s,,,,            
-%s             Z=  %s=ZZZZZZZOOOO %s+++++$           
-%s                :$$$ZZZZZZZZ %sI++++==+          
-%s                  =$$ZZZZZZ$ %s========          
-%s                             +======;          
-%s                              7ZZZZ$           
+%s                              ++++++           
+%s                             ++++++++          
+%s                  ++++++++++ %s++++++++          
+%s                ++++++++++++ %s++++++++          %s
+%s             ++  %s++++++++++++ %s++++++           %s
+%s           +++++  %s++++++++++++ %s^^^^            %s
+%s          +++++++  %s+++++++++++++++++++         %s
+%s         +++++++++          %s+++++++++++        %s
+%s        ++++++++++            %s++++++++++       %s
+%s        ++++++++               %s++++++++++      %s
+%s  ++++++ %s++++++                 %s++++++++++     %s
+%s ++++++++ %s+++++                  %s+++++++++     %s
+%s +++++++++ %s++++                                %s
+%s ++++++++ %s+++++                  %s+++++++++     %s
+%s  ++++++ %s++++++                 %s++++++++++     %s
+%s        ++++++++               %s++++++++++      %s
+%s        +++++++++             %s++++++++++       
+%s         +++++++++         %s++++++++++++        
+%s          +++++++  %s+++++++++++++++++++         
+%s           +++++  %s++++++++++++ %s,,,,            
+%s             ++  %s++++++++++++ %s++++++           
+%s                ++++++++++++ %s++++++++          
+%s                  ++++++++++ %s++++++++          
+%s                             ++++++++          
+%s                              ++++++           
 %s """ % (color3, color3, color2, color3, color2, color3, list[0], color, color2, color3, list[1], color, color2, color3, list[2], color, color2, list[3], color, color2, list[4], color, color2, list[5], color, color2, list[6], color2, color, color2, list[7], color2, color, color2, list[8], color2, color, list[9], color2, color, color3, list[10], color2, color, color3, list[11], color, color3, list[12], color, color3, color, color3, color, color3, color, color3, color, color, color3, color, color3, color, color3, color, color, color, clear)
 
 if screen == 'True':
