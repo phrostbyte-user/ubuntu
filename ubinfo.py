@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 
-# Import libraries
 import subprocess, optparse
 from subprocess import Popen, PIPE
 from optparse import OptionParser
 import re
 
-# Display
 display = [
 	'os', 
 	'hostname',
@@ -18,6 +16,7 @@ display = [
 	'packages',
 	'gpu',
 	'cpu',
+	'ram',
 #	'fs:/boot', 
 #	'fs:/home',
 #	'fs:/MOUNT/POINT
@@ -58,20 +57,16 @@ screen = '%s' % options.screenshot
 def screenshot():
 	subprocess.check_call(['scrot', '-cd5'])
 
-# Operating System Function
 def os_display(): 
 	os = Popen(['lsb_release', '-d'], stdout=PIPE).communicate()[0].split()[1::]
 	output('OS', '%s %s' % (os[0], os[1]))
 
-# Kernel Function
 def kernel_display():
 	output ('Kernel', '%s (%s)' % (uname[2], uname[11]))
 	
-# Kernel Function
 def hostname_display():
 	output ('Hostname', '%s' % uname[1])
 
-# Uptime Function
 def uptime_display():
 	fuptime = int(open('/proc/uptime').read().split('.')[0])
 	day = int(fuptime / 86400)
@@ -87,13 +82,12 @@ def uptime_display():
 	uptime += '%d:%02d' % (hour, minute)
 	output('Uptime', uptime)
 
-# Battery Function [Requires: acpi]
+# requires acpi
 def battery_display(): 
 	p1 = Popen(['acpi'], stdout=PIPE).communicate()[0].lstrip()
 	battery = p1.split(' ')[3].rstrip('\n')
 	output ('Battery', battery)
 
-# Desktop Environment Function 
 def de_display():
 	dict = {'gnome-session': 'GNOME',
 		'ksmserver': 'KDE',
@@ -104,7 +98,6 @@ def de_display():
 		if key in processes: de = dict[key]
 	output ('DE', de)
 
-# Window Manager Function
 def wm_display():
         dict = {'awesome': 'Awesome',
 		'beryl': 'Beryl',
@@ -126,39 +119,45 @@ def wm_display():
 		if key in processes: wm = dict[key]
         output ('WM', wm)
 
-# Packages Function
 def packages_display():
 	p1 = Popen(['dpkg', '--get-selections'], stdout=PIPE)
 	p2 = Popen(['wc', '-l'], stdin=p1.stdout, stdout=PIPE)
 	packages = p2.communicate()[0].rstrip('\n')
 	output ('Packages', packages)
 
-# File System Function
 def fs_display(mount=''):
-	p1 = Popen(['df', '-Ph',  mount], stdout=PIPE).communicate()[0]
+	p1 = Popen(['df', '-TPh',  mount], stdout=PIPE).communicate()[0]
 	used = [line for line in p1.split('\n') if line][1]
-	used = used.split()[2]
+	used = used.split()[3]
 	total = [line for line in p1.split('\n') if line][1]
-	total = total.split()[1]
+	total = total.split()[2]
+	type = [line for line in p1.split('\n') if line][1]
+	type = type.split()[1]
 	if mount == '/': mount = '/root'
-	fs = mount.rpartition('/')[2].title()
-	part = '%s / %s' % (used, total)
+	fs = mount.rpartition('/')[2].title() + " FS"
+	part = '%s / %s (%s)' % (used, total, type)
    	output (fs, part)
 
-# GPU function
 def gpu_display():
 	gpu = Popen('lspci', stdout=PIPE).communicate()[0].split('\n')
-	expr = re.compile('VGA c')
-	output ('GPU', '%s' % ''.join(filter(expr.search, gpu)).split(':')[2])
+	expr = re.compile('VGA')
+	# use regexp 'expr' to filter results, [1::] removes space in string
+	output ('GPU', ''.join(filter(expr.search, gpu)).split(':')[2][1::])
 
-# CPU function
 def cpu_display():
 	cpuinfo = open('/proc/cpuinfo')
 	cpu = set(cpuinfo.read().split('\n'))
 	cpuinfo.close()
-	expr = re.compile('model name')
-	output ('CPU', '%s' % ''.join(filter(expr.search, cpu)).split(':')[1])
+	expr = re.compile('model n')
+	output ('CPU', ''.join(filter(expr.search, cpu)).split(':')[1][1::])
 
+def ram_display():
+	raminfo = Popen(['free', '-m'], stdout=PIPE).communicate()[0].split('\n')
+	ram = ''.join(filter(re.compile('M').search, raminfo)).split()
+	used = int(ram[2]) - int(ram[5]) - int(ram[6])
+	cache = int(ram[5]) + int(ram[6])
+	output ('RAM', '%s MB / %s MB (%s MB cache)' % (used, ram[1], cache))
+	
 # Run functions found in 'display' array.
 for x in display:
 	call = [arg for arg in x.split(':') if arg]
